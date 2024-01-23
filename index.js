@@ -7,5 +7,32 @@ const input = readlinePromises.createInterface({
     output:process.stdout
 })
 
-let jawaban = await input.question("Masukkan input : ");
-console.log(jawaban);
+const database = "database.txt";
+
+console.log("Selamat datang di CRUD CLUB");
+let username = await input.question("Masukkan usernamemu : ");
+
+
+
+//Fungsi menulis data
+async function write(data){
+    const dataLengkap = data.map(function(user){
+        return JSON.stringify(user);
+    }).join('\n');
+    fsPromises.writeFile(database,dataLengkap);
+}
+
+//Fungsi membaca data
+
+//Fungsi register
+
+
+//Fungsi log in
+
+
+//Fungsi hapus data
+
+
+//Fungsi viem member
+
+
