@@ -9,37 +9,48 @@ const input = readlinePromises.createInterface({
 
 const database = "database.txt";
 
-console.log("Selamat datang di CRUD CLUB");
-let username = await input.question("Masukkan usernamemu : ");
-let password = await input.question("Masukkan password : ");
-if(read(username,password)==false){
-    console.log("Nama atau akun tidak terdaftar");
-    let opsi = await input.question("Ingin register(ya/tidak)?");
-    if(opsi.toLowerCase()=="ya".toLowerCase()){
-        let username2 = await input.question("Masukkan usernamemu : ");
-        let password2 = await input.question("Masukkan password : ");
-        register(username2,password2);
-        console.log("Register sukses");
+async function main(){
+    console.log("Selamat datang di CRUD CLUB");
+    let username = await input.question("Masukkan usernamemu : ");
+    let password = await input.question("Masukkan password : ");
+    let status = await read(username,password);
+    if(status==false){
+        console.log("Nama atau akun tidak terdaftar");
+        let opsi = await input.question("Ingin register(ya/tidak)?");
+        if(opsi.toLowerCase()=="ya".toLowerCase()){
+            let username2 = await input.question("Masukkan usernamemu : ");
+            let password2 = await input.question("Masukkan password : ");
+            register(username2,password2);
+            console.log("Register sukses");
+        }
+    }else if(status==true){
+        console.log("Anda berhasil log in");
     }
-}else{
-    console.log("Anda berhasil log in");
 }
 
 
 
 
+
 //Fungsi membaca data
-async function read(username, password){
-    await fsPromises.readFile(database).then((data)=>{
-        let kumpulanUser = data.toString();
+async function read(username, password) {
+    try {
+        const data = await fsPromises.readFile('database.txt', 'utf-8');
+        const kumpulanUser = data.toString();
         const arrayUser = kumpulanUser.split("\n");
-        for(let i in arrayUser){
-            if(arrayUser[i].toLocaleLowerCase==`${username} ${password}`.toLowerCase()){
+
+        for (let i = 0; i < arrayUser.length; i++) {
+            const usernameLengkap = arrayUser[i].split(" ");
+            if (usernameLengkap[0] === username && usernameLengkap[1] === password) {
                 return true;
             }
         }
+
         return false;
-    })
+    } catch (error) {
+        console.error('Error reading file:', error);
+        return false;
+    }
 }
 
 //Fungsi register
@@ -58,3 +69,4 @@ async function register(username, password){
 //Fungsi view member
 
 
+main();
